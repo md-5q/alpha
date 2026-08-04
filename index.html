@@ -1,1 +1,315 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Envoi | بريد إلكتروني مؤقت مجاني وآمن</title>
+
+<meta name="description"
+content="أنشئ بريدًا إلكترونيًا مؤقتًا مجانًا لحماية خصوصيتك واستقبال الرسائل بسرعة دون تسجيل.">
+
+<meta name="keywords"
+content="بريد مؤقت, بريد إلكتروني مؤقت, Temp Mail, Disposable Email, Envoi">
+
+<meta name="author"
+content="Envoi">
+
+<meta name="robots"
+content="index,follow">
+
+<meta name="theme-color"
+content="#0f172a">
+
+<link rel="canonical"
+href="https://YOUR_USERNAME.github.io/envoi/">
+
+<meta property="og:type"
+content="website">
+
+<meta property="og:title"
+content="Envoi | بريد مؤقت مجاني">
+
+<meta property="og:description"
+content="احصل على بريد إلكتروني مؤقت خلال ثوانٍ لحماية خصوصيتك.">
+
+<meta property="og:url"
+content="https://YOUR_USERNAME.github.io/envoi/">
+
+<meta property="og:image"
+content="assets/og-image.png">
+
+<meta property="og:locale"
+content="ar_AR">
+
+<meta name="twitter:card"
+content="summary_large_image">
+
+<meta name="twitter:title"
+content="Envoi">
+
+<meta name="twitter:description"
+content="خدمة بريد إلكتروني مؤقت مجانية وآمنة">
+
+<meta name="twitter:image"
+content="assets/og-image.png">
+
+<link rel="icon"
+href="favicon.ico">
+
+<link rel="manifest"
+href="manifest.json">
+
+<link rel="preconnect"
+href="https://fonts.googleapis.com">
+
+<link rel="preconnect"
+href="https://fonts.gstatic.com"
+crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap"
+rel="stylesheet">
+
+<link rel="stylesheet"
+href="style.css">
+
+<script type="application/ld+json">
+{
+"@context":"https://schema.org",
+"@type":"WebSite",
+"name":"Envoi",
+"url":"https://YOUR_USERNAME.github.io/envoi/",
+"description":"خدمة بريد إلكتروني مؤقت مجانية وآمنة."
+}
+</script>
+
+</head>
+<body>
+
+<header class="navbar">
+
+<div class="container">
+
+<a href="index.html" class="logo">
+
+📨 <span>Envoi</span>
+
+</a>
+
+<nav>
+
+<ul>
+
+<li><a href="index.html" class="active">الرئيسية</a></li>
+
+<li><a href="about.html">من نحن</a></li>
+
+<li><a href="privacy.html">سياسة الخصوصية</a></li>
+
+<li><a href="contact.html">اتصل بنا</a></li>
+
+</ul>
+
+</nav>
+
+</div>
+
+</header>
+
+<main class="main-container">
+
+<section class="hero">
+
+<h1>بريد إلكتروني مؤقت مجاني وآمن</h1>
+
+<p>
+
+أنشئ عنوان بريد مؤقت خلال ثوانٍ واستقبل الرسائل مباشرة
+
+دون الحاجة إلى التسجيل أو مشاركة بريدك الحقيقي.
+
+</p>
+
+</section>
+
+<section class="mail-card">
+
+<div class="mail-box">
+
+<label>البريد الإلكتروني المؤقت</label>
+
+<div id="emailAddress" class="email-address">
+
+جاري إنشاء البريد...
+
+</div>
+
+</div>
+
+<div class="buttons">
+
+<button id="copyBtn">
+
+📋 نسخ البريد
+
+</button>
+
+<button id="newBtn">
+
+🔄 بريد جديد
+
+</button>
+
+<button id="refreshBtn">
+
+📥 تحديث الوارد
+
+</button>
+
+</div>
+
+<div class="status">
+
+<div>
+
+الحالة:
+
+<span id="statusText">
+
+جاري الاتصال...
+
+</span>
+
+</div>
+
+<div>
+
+التحديث بعد
+
+<span id="countdown">
+
+12
+
+</span>
+
+ثانية
+
+</div>
+
+</div>
+
+</section>
+
+<section class="inbox">
+
+<h2>
+
+📥 الرسائل
+
+</h2>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>المرسل</th>
+
+<th>العنوان</th>
+
+<th>الوقت</th>
+
+<th>فتح</th>
+
+</tr>
+
+</thead>
+
+<tbody id="inboxList">
+
+<tr>
+
+<td colspan="4">
+
+لا توجد رسائل حالياً.
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</section>
+
+</main>
+<!-- نافذة قراءة الرسالة -->
+
+<div id="emailModal" class="modal">
+
+<div class="modal-content">
+
+<button class="close-btn" id="closeModalBtn" aria-label="إغلاق">
+
+✕
+
+</button>
+
+<h2 id="mailSubject">عنوان الرسالة</h2>
+
+<p>
+
+<strong>المرسل:</strong>
+
+<span id="mailSender"></span>
+
+</p>
+
+<p>
+
+<strong>التاريخ:</strong>
+
+<span id="mailDate"></span>
+
+</p>
+
+<iframe
+
+id="mailFrame"
+
+title="محتوى الرسالة"
+
+sandbox="allow-same-origin"
+
+loading="lazy">
+
+</iframe>
+
+</div>
+
+</div>
+
+<footer class="footer">
+
+<div class="container">
+
+<p>
+
+© 2026 Envoi — جميع الحقوق محفوظة.
+
+</p>
+
+</div>
+
+</footer>
+
+<script src="script.js"></script>
+
+</body>
+
+</html>
