@@ -1,0 +1,662 @@
+/* ===== Config ===== */
+const API_BASE = 'https://api.mail.tm';
+const POLL_INTERVAL = 8000;
+
+/* ===== i18n ===== */
+const translations = {
+  ar: {
+    trust_ssl: '🔒 اتصال آمن',
+    trust_no_logs: '🛡️ لا نسجل بياناتك',
+    trust_free: '✨ مجاني 100%',
+    trust_instant: '⚡ فوري',
+    nav_home: 'الرئيسية',
+    nav_blog: 'المقالات',
+    nav_about: 'من نحن',
+    nav_privacy: 'الخصوصية',
+    nav_terms: 'الشروط',
+    nav_contact: 'اتصل بنا',
+    hero_badge: '✓ موثوق · آمن · احترافي',
+    hero_title: 'بريد إلكتروني مؤقت <span>آمن وفخم</span>',
+    hero_subtitle: 'احمِ بريدك الحقيقي. احصل على عنوان مؤقت فوري، استقبل الرسائل بأمان، واحذف كل شيء بنقرة. بدون تسجيل. بدون تتبع.',
+    your_email: 'عنوانك المؤقت',
+    email_hint: 'جاهز فوراً · للاستخدام المشروع فقط',
+    refresh: 'تحديث',
+    copy: 'نسخ',
+    loading: 'جاري التحميل...',
+    new_email: 'عنوان جديد',
+    sec1: 'مشفر',
+    sec2: 'لا نقرأ رسائلك',
+    sec3: 'حذف تلقائي',
+    inbox: 'صندوق الوارد',
+    no_messages: 'لا توجد رسائل بعد',
+    no_messages_hint: 'الرسائل الواردة ستظهر هنا تلقائياً',
+    why_title: 'لماذا يثق بنا المستخدمون؟',
+    f1_title: 'فوري 100%',
+    f1_desc: 'عنوان جاهز خلال ثانية. بدون تسجيل أو انتظار.',
+    f2_title: 'خصوصية حقيقية',
+    f2_desc: 'لا نخزن بياناتك الشخصية ولا نبيع أي معلومات.',
+    f3_title: 'استخدام آمن',
+    f3_desc: 'مثالي للتسجيل والتجارب دون كشف بريدك الحقيقي.',
+    f4_title: 'عربي وإنجليزي',
+    f4_desc: 'واجهة كاملة باللغتين لتجربة سلسة للجميع.',
+    how_title: 'كيف يعمل؟',
+    s1_title: 'احصل على العنوان',
+    s1_desc: 'يظهر عنوان مؤقت فوراً. انسخه واستخدمه.',
+    s2_title: 'استقبل الرسائل',
+    s2_desc: 'الرسائل تصل تلقائياً ويمكنك قراءتها هنا.',
+    s3_title: 'احذف وانسَ',
+    s3_desc: 'اختر عنواناً جديداً متى شئت. لا أثر متبقي.',
+    blog_cta_title: 'تعلّم كيف تحمي خصوصيتك',
+    blog_cta_desc: 'مقالات عملية عن الأمان الرقمي والبريد المؤقت.',
+    blog_cta_btn: 'تصفح المقالات',
+    footer_desc: 'خدمة بريد مؤقت احترافية مصممة لحماية خصوصيتك بأقصى درجات الشفافية والأمان.',
+    footer_product: 'المنتج',
+    footer_legal: 'قانوني',
+    footer_company: 'الشركة',
+    rights: 'جميع الحقوق محفوظة.',
+    footer_note: 'للاستخدام المشروع فقط. نحن ملتزمون بالخصوصية والأمان.',
+    about_h1: 'من نحن',
+    about_p1: 'TempMail Pro هي خدمة بريد إلكتروني مؤقت احترافية صُممت لحماية خصوصيتك على الإنترنت بطريقة بسيطة وآمنة وشفافة.',
+    about_p2: 'نؤمن أن الخصوصية حق أساسي. لذلك نوفر عناوين بريد مؤقتة فورية يمكنك استخدامها للتسجيل في المواقع أو تحميل الملفات أو أي غرض مشروع دون الكشف عن بريدك الحقيقي.',
+    about_mission: 'مهمتنا',
+    about_mission_p: 'تقديم أداة موثوقة وسريعة تحترم المستخدم، مع واجهة فخمة وتجربة واضحة، والالتزام الكامل بالاستخدام المشروع فقط.',
+    about_values: 'قيمنا',
+    about_v1: 'الخصوصية أولاً — لا نطلب بيانات شخصية.',
+    about_v2: 'الشفافية — سياسات واضحة وشروط صريحة.',
+    about_v3: 'الأمان — خدمة مخصصة للاستخدام القانوني فقط.',
+    about_v4: 'الجودة — تصميم وتجربة بمستوى عالمي.',
+    about_note: 'ملاحظة هامة',
+    about_note_p: 'الخدمة مخصصة للاستخدام المشروع فقط. يُمنع استخدامها في أي نشاط غير قانوني أو احتيالي. نحن غير مسؤولين عن سوء استخدام الخدمة من قبل أي طرف.',
+    priv_h1: 'سياسة الخصوصية',
+    priv_updated: 'آخر تحديث:',
+    priv_1: '1. مقدمة',
+    priv_1_p: 'نحترم خصوصيتك. توضح هذه السياسة كيف نتعامل مع المعلومات عند استخدامك TempMail Pro.',
+    priv_2: '2. المعلومات التي نجمعها',
+    priv_2_p: 'نحن لا نطلب ولا نجمع معلومات شخصية مثل الاسم أو البريد الحقيقي أو رقم الهاتف. الخدمة تعمل بدون تسجيل حساب.',
+    priv_2_p2: 'قد تُجمع بيانات تقنية مجهولة (مثل نوع المتصفح) لتحسين الخدمة عبر أدوات تحليلية قياسية.',
+    priv_3: '3. البريد المؤقت والرسائل',
+    priv_3_p: 'عناوين البريد المؤقتة والرسائل تُدار عبر مزودي API خارجيين. نحن لا نخزن محتوى الرسائل على خوادم دائمة تابعة لنا.',
+    priv_4: '4. ملفات تعريف الارتباط',
+    priv_4_p: 'قد نستخدم ملفات تعريف ارتباط ضرورية لعمل الموقع. في حال عرض إعلانات (مثل Google AdSense)، قد يستخدم الشركاء تقنيات إعلانية وفق سياساتهم.',
+    priv_5: '5. الإعلانات',
+    priv_5_p: 'قد يعرض الموقع إعلانات من طرف ثالث. هذه الإعلانات قد تستخدم بيانات مجهولة لعرض محتوى مناسب.',
+    priv_6: '6. الروابط الخارجية',
+    priv_6_p: 'قد يحتوي الموقع على روابط لمواقع أخرى. لسنا مسؤولين عن سياسات الخصوصية الخاصة بها.',
+    priv_7: '7. الأمان',
+    priv_7_p: 'نسعى لحماية الخدمة ضمن الإمكانيات التقنية المتاحة. لا توجد طريقة نقل عبر الإنترنت آمنة 100%.',
+    priv_8: '8. التواصل',
+    priv_8_p: 'لأي استفسار بخصوص الخصوصية راسلنا عبر:',
+    priv_9: '9. التغييرات',
+    priv_9_p: 'قد نحدّث هذه السياسة من وقت لآخر. يُنصح بمراجعتها دورياً.',
+    terms_h1: 'شروط الاستخدام',
+    terms_1: '1. قبول الشروط',
+    terms_1_p: 'باستخدامك TempMail Pro فإنك توافق على هذه الشروط. إذا لم توافق، يرجى عدم استخدام الخدمة.',
+    terms_2: '2. وصف الخدمة',
+    terms_2_p: 'نوفر عناوين بريد إلكتروني مؤقتة للاستخدام المشروع فقط (مثل حماية البريد الحقيقي من الرسائل غير المرغوب فيها).',
+    terms_3: '3. الاستخدام المسموح والممنوع',
+    terms_3_p: 'يُسمح بالاستخدام القانوني فقط. يُمنع منعاً باتاً:',
+    terms_3_l1: 'أي نشاط غير قانوني أو احتيالي',
+    terms_3_l2: 'إرسال بريد مزعج أو تصيد أو برامج خبيثة',
+    terms_3_l3: 'انتهاك حقوق الآخرين أو القوانين المعمول بها',
+    terms_3_l4: 'محاولة الإضرار بالخدمة أو إساءة استخدامها',
+    terms_4: '4. إخلاء المسؤولية',
+    terms_4_p: 'الخدمة تُقدم "كما هي". نحن غير مسؤولين عن أي أضرار ناتجة عن استخدام أو سوء استخدام الخدمة، أو عن محتوى الرسائل المستلمة عبر العناوين المؤقتة.',
+    terms_5: '5. إنهاء الاستخدام',
+    terms_5_p: 'نحتفظ بالحق في تقييد أو إيقاف الوصول للخدمة عند مخالفة هذه الشروط.',
+    terms_6: '6. التواصل',
+    terms_6_p: 'للاستفسارات:',
+    contact_h1: 'اتصل بنا',
+    contact_p: 'نسعد بتواصلك. لأي استفسار أو اقتراح أو بلاغ عن إساءة استخدام، راسلنا عبر البريد التالي:',
+    contact_email_label: 'البريد الإلكتروني',
+    contact_btn: 'إرسال رسالة',
+    contact_note: 'نرد عادة خلال مدة معقولة. يرجى عدم إرسال محتوى غير قانوني أو مزعج.',
+    contact_abuse: 'الإبلاغ عن إساءة استخدام',
+    contact_abuse_p: 'إذا لاحظت استخداماً غير مشروع للخدمة، يرجى إبلاغنا فوراً عبر نفس البريد أعلاه مع التفاصيل المتوفرة لديك.',
+    blog_title: 'المقالات',
+    blog_intro: 'مقالات عملية عن الخصوصية والأمان الرقمي والبريد المؤقت.',
+    tag_privacy: 'خصوصية',
+    tag_guide: 'دليل',
+    tag_security: 'أمان',
+    art1_title: 'كيف تحمي بريدك الإلكتروني الحقيقي؟',
+    art1_excerpt: 'نصائح عملية لتقليل الرسائل المزعجة وحماية حساباتك باستخدام البريد المؤقت بذكاء.',
+    art2_title: 'لماذا تستخدم بريداً مؤقتاً؟',
+    art2_excerpt: 'الفوائد الحقيقية للبريد المؤقت ومتى يكون الخيار الأفضل لحماية خصوصيتك.',
+    art3_title: 'أفضل ممارسات الأمان على الإنترنت',
+    art3_excerpt: 'خطوات بسيطة وقوية لرفع مستوى أمانك الرقمي دون تعقيد.',
+    read_more: 'اقرأ المزيد ←',
+    back_blog: '← العودة للمقالات',
+    art1_full_title: 'كيف تحمي بريدك الإلكتروني الحقيقي؟',
+    art1_meta: 'دليل خصوصية · TempMail Pro',
+    art1_p1: 'بريدك الإلكتروني الحقيقي هو مفتاح الكثير من حساباتك. كلما استخدمته في مواقع غير ضرورية، زادت احتمالية وصول رسائل مزعجة أو محاولات تصيد.',
+    art1_h2a: 'لماذا يتعرض البريد الحقيقي للخطر؟',
+    art1_p2: 'كثير من المواقع تطلب بريداً للتسجيل فقط، ثم ترسل عروضاً أو تشارك البيانات مع أطراف أخرى. النتيجة: صندوق وارد مزدحم وضعف في الخصوصية.',
+    art1_h2b: 'دور البريد المؤقت',
+    art1_p3: 'البريد المؤقت يمنحك عنواناً سريعاً تستخدمه للتسجيل أو التحميل أو التجربة، دون الكشف عن بريدك الأساسي. بعد انتهاء الغرض، يمكنك تجاهل العنوان أو إنشاء عنوان جديد.',
+    art1_h2c: 'نصائح عملية',
+    art1_li1: 'استخدم بريداً مؤقتاً للمواقع التي لا تثق بها بالكامل.',
+    art1_li2: 'أبقِ بريدك الحقيقي للحسابات المهمة فقط (بنك، عمل، حسابات أساسية).',
+    art1_li3: 'فعّل التحقق بخطوتين على بريدك الرئيسي.',
+    art1_li4: 'لا تفتح روابط مشبوهة حتى لو وصلت على بريد مؤقت.',
+    art1_p4: 'الخصوصية عادة تأتي من عادات بسيطة ومتسقة، وليس من أدوات معقدة فقط.',
+    art2_full_title: 'لماذا تستخدم بريداً مؤقتاً؟',
+    art2_meta: 'دليل استخدام · TempMail Pro',
+    art2_p1: 'البريد المؤقت ليس للتستر على أفعال خاطئة، بل أداة عملية لحماية الخصوصية اليومية على الإنترنت.',
+    art2_h2a: 'أبرز الفوائد',
+    art2_li1: 'تقليل الرسائل الإعلانية على بريدك الرئيسي.',
+    art2_li2: 'تجربة الخدمات الجديدة دون الالتزام طويل الأمد.',
+    art2_li3: 'حماية هويتك الرقمية في المواقع غير الأساسية.',
+    art2_li4: 'سرعة الاستخدام بدون إنشاء حسابات دائمة.',
+    art2_h2b: 'متى تستخدمه؟',
+    art2_p2: 'مناسب للتسجيل في منتديات، تحميل ملفات، الاشتراك في نشرات تجريبية، أو أي موقع لا تحتاج الإبقاء على علاقة طويلة معه.',
+    art2_h2c: 'متى لا تستخدمه؟',
+    art2_p3: 'لا تستخدم بريداً مؤقتاً للحسابات المهمة مثل البنوك أو العمل أو الحسابات التي تحتاج استعادة دائمة. هذه تحتاج بريداً حقيقياً ومستقراً.',
+    art2_p4: 'الاستخدام الواعي هو ما يجعل الأداة مفيدة وآمنة.',
+    art3_full_title: 'أفضل ممارسات الأمان على الإنترنت',
+    art3_meta: 'أمان رقمي · TempMail Pro',
+    art3_p1: 'الأمان الرقمي لا يحتاج تعقيداً كبيراً. عادات بسيطة وثابتة تصنع فرقاً كبيراً.',
+    art3_h2a: 'كلمات المرور',
+    art3_p2: 'استخدم كلمات مرور قوية وفريدة لكل حساب مهم. مدير كلمات المرور يساعدك على ذلك بسهولة.',
+    art3_h2b: 'التحقق بخطوتين',
+    art3_p3: 'فعّله على البريد والحسابات الحساسة. حتى لو تسربت كلمة المرور، يبقى هناك حاجز إضافي.',
+    art3_h2c: 'الوعي بالروابط',
+    art3_p4: 'لا تضغط على روابط من مصادر غير موثوقة. تحقق من عنوان الموقع قبل إدخال أي بيانات.',
+    art3_h2d: 'فصل الهوية',
+    art3_p5: 'استخدم بريداً مؤقتاً للأنشطة غير الأساسية، واحتفظ ببريدك الحقيقي للحسابات المهمة فقط. هذا يقلل الضرر إذا تعرض موقع ثانوي لمشكلة.',
+    art3_p6: 'الهدف ليس الخوف، بل الوعي والسيطرة على بياناتك.'
+  },
+  en: {
+    trust_ssl: '🔒 Secure connection',
+    trust_no_logs: '🛡️ We don’t log your data',
+    trust_free: '✨ 100% Free',
+    trust_instant: '⚡ Instant',
+    nav_home: 'Home',
+    nav_blog: 'Blog',
+    nav_about: 'About',
+    nav_privacy: 'Privacy',
+    nav_terms: 'Terms',
+    nav_contact: 'Contact',
+    hero_badge: '✓ Trusted · Secure · Professional',
+    hero_title: 'Temporary Email <span>Secure & Premium</span>',
+    hero_subtitle: 'Protect your real inbox. Get an instant temporary address, receive emails securely, and discard everything in one click. No signup. No tracking.',
+    your_email: 'Your temporary address',
+    email_hint: 'Ready instantly · Legitimate use only',
+    refresh: 'Refresh',
+    copy: 'Copy',
+    loading: 'Loading...',
+    new_email: 'New address',
+    sec1: 'Encrypted',
+    sec2: 'We don’t read your mail',
+    sec3: 'Auto-delete',
+    inbox: 'Inbox',
+    no_messages: 'No messages yet',
+    no_messages_hint: 'Incoming messages will appear here automatically',
+    why_title: 'Why users trust us',
+    f1_title: '100% Instant',
+    f1_desc: 'An address ready in a second. No registration or waiting.',
+    f2_title: 'Real privacy',
+    f2_desc: 'We don’t store personal data and we don’t sell information.',
+    f3_title: 'Safe to use',
+    f3_desc: 'Ideal for sign-ups and trials without exposing your real email.',
+    f4_title: 'Arabic & English',
+    f4_desc: 'Full interface in both languages for a smooth experience.',
+    how_title: 'How it works',
+    s1_title: 'Get the address',
+    s1_desc: 'A temporary address appears instantly. Copy and use it.',
+    s2_title: 'Receive messages',
+    s2_desc: 'Messages arrive automatically and you can read them here.',
+    s3_title: 'Delete & move on',
+    s3_desc: 'Create a new address whenever you want. No leftover traces.',
+    blog_cta_title: 'Learn how to protect your privacy',
+    blog_cta_desc: 'Practical articles on digital security and temporary email.',
+    blog_cta_btn: 'Browse articles',
+    footer_desc: 'A professional temporary email service designed to protect your privacy with maximum transparency and security.',
+    footer_product: 'Product',
+    footer_legal: 'Legal',
+    footer_company: 'Company',
+    rights: 'All rights reserved.',
+    footer_note: 'For legitimate use only. We are committed to privacy and security.',
+    about_h1: 'About Us',
+    about_p1: 'TempMail Pro is a professional temporary email service designed to protect your privacy online in a simple, secure and transparent way.',
+    about_p2: 'We believe privacy is a basic right. That’s why we provide instant temporary addresses you can use for sign-ups, downloads or any legitimate purpose without revealing your real email.',
+    about_mission: 'Our mission',
+    about_mission_p: 'To offer a reliable, fast tool that respects users, with a premium interface and clear experience, while fully committing to legitimate use only.',
+    about_values: 'Our values',
+    about_v1: 'Privacy first — we don’t ask for personal data.',
+    about_v2: 'Transparency — clear policies and explicit terms.',
+    about_v3: 'Security — service intended for lawful use only.',
+    about_v4: 'Quality — design and experience at a global standard.',
+    about_note: 'Important note',
+    about_note_p: 'The service is for legitimate use only. It is forbidden to use it for any illegal or fraudulent activity. We are not responsible for misuse by any party.',
+    priv_h1: 'Privacy Policy',
+    priv_updated: 'Last updated:',
+    priv_1: '1. Introduction',
+    priv_1_p: 'We respect your privacy. This policy explains how we handle information when you use TempMail Pro.',
+    priv_2: '2. Information we collect',
+    priv_2_p: 'We do not request or collect personal information such as name, real email or phone number. The service works without account registration.',
+    priv_2_p2: 'Anonymous technical data (such as browser type) may be collected to improve the service via standard analytics tools.',
+    priv_3: '3. Temporary email and messages',
+    priv_3_p: 'Temporary addresses and messages are handled via external API providers. We do not permanently store message content on our own servers.',
+    priv_4: '4. Cookies',
+    priv_4_p: 'We may use necessary cookies for the site to function. If ads are shown (e.g. Google AdSense), partners may use advertising technologies according to their policies.',
+    priv_5: '5. Advertising',
+    priv_5_p: 'The site may display third-party ads. These ads may use anonymous data to show relevant content.',
+    priv_6: '6. External links',
+    priv_6_p: 'The site may contain links to other websites. We are not responsible for their privacy policies.',
+    priv_7: '7. Security',
+    priv_7_p: 'We aim to protect the service within available technical means. No method of transmission over the Internet is 100% secure.',
+    priv_8: '8. Contact',
+    priv_8_p: 'For any privacy-related inquiry, contact us at:',
+    priv_9: '9. Changes',
+    priv_9_p: 'We may update this policy from time to time. Please review it periodically.',
+    terms_h1: 'Terms of Use',
+    terms_1: '1. Acceptance of terms',
+    terms_1_p: 'By using TempMail Pro you agree to these terms. If you do not agree, please do not use the service.',
+    terms_2: '2. Service description',
+    terms_2_p: 'We provide temporary email addresses for legitimate use only (such as protecting your real inbox from unwanted messages).',
+    terms_3: '3. Allowed and prohibited use',
+    terms_3_p: 'Only lawful use is allowed. Strictly prohibited:',
+    terms_3_l1: 'Any illegal or fraudulent activity',
+    terms_3_l2: 'Sending spam, phishing or malware',
+    terms_3_l3: 'Violating others’ rights or applicable laws',
+    terms_3_l4: 'Attempting to harm or abuse the service',
+    terms_4: '4. Disclaimer',
+    terms_4_p: 'The service is provided “as is”. We are not liable for any damages resulting from use or misuse of the service, or from the content of messages received via temporary addresses.',
+    terms_5: '5. Termination',
+    terms_5_p: 'We reserve the right to restrict or stop access to the service if these terms are violated.',
+    terms_6: '6. Contact',
+    terms_6_p: 'For inquiries:',
+    contact_h1: 'Contact Us',
+    contact_p: 'We are happy to hear from you. For questions, suggestions or abuse reports, email us at:',
+    contact_email_label: 'Email',
+    contact_btn: 'Send a message',
+    contact_note: 'We usually reply within a reasonable time. Please do not send illegal or abusive content.',
+    contact_abuse: 'Report abuse',
+    contact_abuse_p: 'If you notice illegitimate use of the service, please report it immediately via the same email above with any details you have.',
+    blog_title: 'Blog',
+    blog_intro: 'Practical articles on privacy, digital security and temporary email.',
+    tag_privacy: 'Privacy',
+    tag_guide: 'Guide',
+    tag_security: 'Security',
+    art1_title: 'How to protect your real email',
+    art1_excerpt: 'Practical tips to reduce spam and protect your accounts using temporary email wisely.',
+    art2_title: 'Why use a temporary email?',
+    art2_excerpt: 'The real benefits of temporary email and when it is the best choice for your privacy.',
+    art3_title: 'Best online security practices',
+    art3_excerpt: 'Simple, powerful steps to raise your digital security without complexity.',
+    read_more: 'Read more →',
+    back_blog: '← Back to blog',
+    art1_full_title: 'How to protect your real email',
+    art1_meta: 'Privacy guide · TempMail Pro',
+    art1_p1: 'Your real email is the key to many of your accounts. The more you use it on unnecessary sites, the higher the chance of spam or phishing attempts.',
+    art1_h2a: 'Why is the real inbox at risk?',
+    art1_p2: 'Many sites ask for an email only to register, then send offers or share data with others. Result: a crowded inbox and weaker privacy.',
+    art1_h2b: 'The role of temporary email',
+    art1_p3: 'Temporary email gives you a quick address for sign-ups, downloads or trials without revealing your main inbox. When done, you can ignore it or create a new one.',
+    art1_h2c: 'Practical tips',
+    art1_li1: 'Use temporary email on sites you don’t fully trust.',
+    art1_li2: 'Keep your real email for important accounts only (bank, work, core accounts).',
+    art1_li3: 'Enable two-factor authentication on your main email.',
+    art1_li4: 'Don’t open suspicious links even if they arrive on a temporary address.',
+    art1_p4: 'Privacy usually comes from simple, consistent habits — not only from complex tools.',
+    art2_full_title: 'Why use a temporary email?',
+    art2_meta: 'Usage guide · TempMail Pro',
+    art2_p1: 'Temporary email is not for hiding wrongdoing. It is a practical tool for everyday online privacy.',
+    art2_h2a: 'Key benefits',
+    art2_li1: 'Reduce promotional mail on your main inbox.',
+    art2_li2: 'Try new services without long-term commitment.',
+    art2_li3: 'Protect your digital identity on non-essential sites.',
+    art2_li4: 'Fast use without creating permanent accounts.',
+    art2_h2b: 'When to use it',
+    art2_p2: 'Suitable for forums, file downloads, trial newsletters, or any site you don’t need a long relationship with.',
+    art2_h2c: 'When not to use it',
+    art2_p3: 'Don’t use temporary email for important accounts such as banking, work, or anything that needs permanent recovery. Those need a real, stable address.',
+    art2_p4: 'Mindful use is what makes the tool useful and safe.',
+    art3_full_title: 'Best online security practices',
+    art3_meta: 'Digital security · TempMail Pro',
+    art3_p1: 'Digital security doesn’t need extreme complexity. Simple, consistent habits make a big difference.',
+    art3_h2a: 'Passwords',
+    art3_p2: 'Use strong, unique passwords for every important account. A password manager makes this easy.',
+    art3_h2b: 'Two-factor authentication',
+    art3_p3: 'Enable it on email and sensitive accounts. Even if a password leaks, an extra barrier remains.',
+    art3_h2c: 'Link awareness',
+    art3_p4: 'Don’t click links from untrusted sources. Check the site address before entering any data.',
+    art3_h2d: 'Identity separation',
+    art3_p5: 'Use temporary email for non-essential activity and keep your real email for important accounts only. This limits damage if a secondary site has a problem.',
+    art3_p6: 'The goal is not fear — it is awareness and control over your data.'
+  }
+};
+
+let currentLang = localStorage.getItem('tm_lang') || 'ar';
+
+/* ===== Apply translations to the page ===== */
+function applyLanguage(lang) {
+  if (!translations[lang]) lang = 'ar';
+  currentLang = lang;
+  localStorage.setItem('tm_lang', lang);
+
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+
+  const dict = translations[lang];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (dict[key] !== undefined) {
+      el.innerHTML = dict[key];
+    }
+  });
+
+  const langBtn = document.getElementById('langBtn');
+  if (langBtn) langBtn.textContent = lang === 'ar' ? 'EN' : 'AR';
+
+  // Re-render inbox empty state / items with correct language
+  renderMessages(lastMessages);
+}
+
+/* ===== Toast ===== */
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  if (!toast) return;
+  toast.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+/* ===== mail.tm account state ===== */
+let account = null;      // { address, password, token, id }
+let pollTimer = null;
+let lastMessages = [];
+
+function randomString(len) {
+  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  let s = '';
+  for (let i = 0; i < len; i++) s += chars[Math.floor(Math.random() * chars.length)];
+  return s;
+}
+
+async function getDomain() {
+  const res = await fetch(`${API_BASE}/domains`);
+  if (!res.ok) throw new Error('domains fetch failed');
+  const data = await res.json();
+  const domains = data['hydra:member'] || data.member || [];
+  if (!domains.length) throw new Error('no domains available');
+  return domains[0].domain;
+}
+
+async function createAccount() {
+  const domain = await getDomain();
+  const address = `${randomString(10)}@${domain}`;
+  const password = randomString(14);
+
+  const createRes = await fetch(`${API_BASE}/accounts`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ address, password })
+  });
+  if (!createRes.ok) throw new Error('account creation failed');
+  const accData = await createRes.json();
+
+  const tokenRes = await fetch(`${API_BASE}/token`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ address, password })
+  });
+  if (!tokenRes.ok) throw new Error('token fetch failed');
+  const tokenData = await tokenRes.json();
+
+  account = { address, password, token: tokenData.token, id: accData.id };
+  localStorage.setItem('tm_account', JSON.stringify(account));
+  return account;
+}
+
+function loadStoredAccount() {
+  try {
+    const raw = localStorage.getItem('tm_account');
+    return raw ? JSON.parse(raw) : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+async function ensureAccount() {
+  const stored = loadStoredAccount();
+  if (stored && stored.token) {
+    try {
+      const res = await fetch(`${API_BASE}/messages`, {
+        headers: { Authorization: `Bearer ${stored.token}` }
+      });
+      if (res.ok) {
+        account = stored;
+        return account;
+      }
+    } catch (e) { /* fall through to create a new one */ }
+  }
+  return await createAccount();
+}
+
+/* ===== Email display ===== */
+function updateEmailDisplay() {
+  const el = document.getElementById('emailAddress');
+  if (el && account) el.textContent = account.address;
+}
+
+async function initEmail() {
+  const el = document.getElementById('emailAddress');
+  if (el) el.textContent = translations[currentLang].loading;
+  try {
+    await ensureAccount();
+    updateEmailDisplay();
+    await fetchMessages();
+    startPolling();
+  } catch (e) {
+    console.error(e);
+    if (el) el.textContent = currentLang === 'ar' ? 'تعذر التحميل، اضغط تحديث' : 'Failed to load, tap refresh';
+    showToast(currentLang === 'ar' ? 'حدث خطأ' : 'Something went wrong');
+  }
+}
+
+async function createNewEmail() {
+  stopPolling();
+  const el = document.getElementById('emailAddress');
+  if (el) el.textContent = translations[currentLang].loading;
+  lastMessages = [];
+  renderMessages(lastMessages);
+  try {
+    await createAccount();
+    updateEmailDisplay();
+    await fetchMessages();
+    startPolling();
+    showToast(currentLang === 'ar' ? 'تم إنشاء عنوان جديد' : 'New address created');
+  } catch (e) {
+    console.error(e);
+    showToast(currentLang === 'ar' ? 'حدث خطأ' : 'Something went wrong');
+  }
+}
+
+/* ===== Inbox rendering ===== */
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str || '';
+  return div.innerHTML;
+}
+
+function renderMessages(messages) {
+  lastMessages = messages || [];
+  const list = document.getElementById('inboxList');
+  const count = document.getElementById('inboxCount');
+  if (count) count.textContent = lastMessages.length;
+  if (!list) return;
+
+  const dict = translations[currentLang];
+
+  if (!lastMessages.length) {
+    list.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">📭</div>
+        <p>${dict.no_messages}</p>
+        <span>${dict.no_messages_hint}</span>
+      </div>`;
+    return;
+  }
+
+  list.innerHTML = lastMessages.map(m => `
+    <div class="inbox-item" data-id="${m.id}">
+      <div class="inbox-item-from">${escapeHtml(m.from && m.from.address)}</div>
+      <div class="inbox-item-subject">${escapeHtml(m.subject || (currentLang === 'ar' ? '(بدون موضوع)' : '(no subject)'))}</div>
+      <div class="inbox-item-date">${new Date(m.createdAt).toLocaleString(currentLang === 'ar' ? 'ar' : 'en')}</div>
+    </div>
+  `).join('');
+
+  list.querySelectorAll('.inbox-item').forEach(item => {
+    item.addEventListener('click', () => openMessage(item.getAttribute('data-id')));
+  });
+}
+
+async function fetchMessages() {
+  if (!account) return;
+  try {
+    const res = await fetch(`${API_BASE}/messages`, {
+      headers: { Authorization: `Bearer ${account.token}` }
+    });
+    if (!res.ok) return;
+    const data = await res.json();
+    const messages = data['hydra:member'] || data.member || [];
+    renderMessages(messages);
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+async function openMessage(id) {
+  if (!account) return;
+  try {
+    const res = await fetch(`${API_BASE}/messages/${id}`, {
+      headers: { Authorization: `Bearer ${account.token}` }
+    });
+    if (!res.ok) return;
+    const msg = await res.json();
+
+    document.getElementById('modalSubject').textContent = msg.subject || '';
+    document.getElementById('modalFrom').textContent = msg.from ? msg.from.address : '';
+    document.getElementById('modalDate').textContent = new Date(msg.createdAt).toLocaleString();
+
+    const body = document.getElementById('modalBody');
+    if (msg.html && msg.html.length) {
+      body.innerHTML = msg.html.join('');
+    } else {
+      body.textContent = msg.text || '';
+    }
+
+    document.getElementById('messageModal').classList.add('open');
+
+    // mark as seen (best-effort, ignore failures)
+    fetch(`${API_BASE}/messages/${id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/merge-patch+json',
+        Authorization: `Bearer ${account.token}`
+      },
+      body: JSON.stringify({ seen: true })
+    }).catch(() => {});
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+function closeModal() {
+  const modal = document.getElementById('messageModal');
+  if (modal) modal.classList.remove('open');
+}
+
+function startPolling() {
+  stopPolling();
+  pollTimer = setInterval(fetchMessages, POLL_INTERVAL);
+}
+function stopPolling() {
+  if (pollTimer) clearInterval(pollTimer);
+  pollTimer = null;
+}
+
+/* ===== Copy email ===== */
+function copyEmail() {
+  if (!account) return;
+  const fallbackCopy = () => {
+    const ta = document.createElement('textarea');
+    ta.value = account.address;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta);
+  };
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(account.address)
+      .then(() => showToast(currentLang === 'ar' ? 'تم النسخ!' : 'Copied!'))
+      .catch(() => { fallbackCopy(); showToast(currentLang === 'ar' ? 'تم النسخ!' : 'Copied!'); });
+  } else {
+    fallbackCopy();
+    showToast(currentLang === 'ar' ? 'تم النسخ!' : 'Copied!');
+  }
+}
+
+/* ===== Mobile menu ===== */
+function toggleMobileMenu() {
+  const menu = document.getElementById('mobileMenu');
+  const btn = document.getElementById('menuToggle');
+  if (menu) menu.classList.toggle('open');
+  if (btn) btn.classList.toggle('active');
+}
+
+/* ===== Init ===== */
+document.addEventListener('DOMContentLoaded', () => {
+  applyLanguage(currentLang);
+
+  const langBtn = document.getElementById('langBtn');
+  if (langBtn) {
+    langBtn.addEventListener('click', () => {
+      applyLanguage(currentLang === 'ar' ? 'en' : 'ar');
+    });
+  }
+
+  const menuToggle = document.getElementById('menuToggle');
+  if (menuToggle) menuToggle.addEventListener('click', toggleMobileMenu);
+
+  const mobileMenu = document.getElementById('mobileMenu');
+  if (mobileMenu) {
+    mobileMenu.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        mobileMenu.classList.remove('open');
+        if (menuToggle) menuToggle.classList.remove('active');
+      });
+    });
+  }
+
+  const refreshBtn = document.getElementById('refreshBtn');
+  if (refreshBtn) refreshBtn.addEventListener('click', () => {
+    fetchMessages();
+    showToast(currentLang === 'ar' ? 'تم التحديث' : 'Refreshed');
+  });
+
+  const copyBtn = document.getElementById('copyBtn');
+  if (copyBtn) copyBtn.addEventListener('click', copyEmail);
+
+  const newEmailBtn = document.getElementById('newEmailBtn');
+  if (newEmailBtn) newEmailBtn.addEventListener('click', createNewEmail);
+
+  const modalClose = document.getElementById('modalClose');
+  if (modalClose) modalClose.addEventListener('click', closeModal);
+
+  const modal = document.getElementById('messageModal');
+  if (modal) {
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+  }
+
+  // Only run the email/inbox logic on pages that actually have the email card
+  if (document.getElementById('emailAddress')) {
+    initEmail();
+  }
+});
