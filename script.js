@@ -328,4 +328,4 @@ const translations = {
 
 let currentLang = localStorage.getItem('tm_lang') || 'ar';
 
-function applyL
+/* ===== Apply 
